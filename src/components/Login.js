@@ -29,7 +29,7 @@ export default function Login({ handleLogin }) {
         <div className="form__container">
           <h2 className="form__title">Вход</h2>
           <form className="form__form" onSubmit={handleSubmit}>
-            <div className="popup__fieldset">
+            <div className="form__fieldset">
               <input
                 className="form__input"
                 type="email"
@@ -41,7 +41,7 @@ export default function Login({ handleLogin }) {
                 value={formParams.email}
               />
             </div>
-            <div className="popup__fieldset">
+            <div className="form__fieldset">
               <input
                 className="form__input"
                 type="password"
