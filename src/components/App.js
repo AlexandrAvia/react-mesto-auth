@@ -1,4 +1,3 @@
-import React from "react";
 import Header from "./Header";
 import Main from "./Main";
 import Footer from "./Footer";
@@ -31,13 +30,15 @@ function App() {
   const history = useHistory();
 
   useEffect(() => {
-    Promise.all([api.getProfile(), api.getInitialCards()])
-      .then(([userData, card]) => {
-        setCurrentUser(userData);
-        setCards(card);
-      })
-      .catch(console.log);
-  }, []);
+    if (loggedIn) {
+      Promise.all([api.getProfile(), api.getInitialCards()])
+        .then(([userData, card]) => {
+          setCurrentUser(userData);
+          setCards(card);
+        })
+        .catch(console.log);
+    }
+  }, [loggedIn]);
 
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
@@ -125,7 +126,6 @@ function App() {
   }
 
   const handleRegister = ({ email, password }) => {
-    debugger;
     return auth
       .register(email, password)
       .then((res) => {
@@ -134,7 +134,8 @@ function App() {
           history.push("/sign-in");
         }
       })
-      .catch(() => {
+      .catch((err) => {
+        console.log(err);
         setIsRegistrationSuccess(false);
       })
       .finally(() => {
@@ -147,19 +148,23 @@ function App() {
       .authorize(email, password)
       .then((data) => {
         if (data.token) {
+          setIsRegistrationSuccess(true);
           localStorage.setItem("jwt", data.token);
-
           tokenCheck();
         }
       })
       .catch((err) => {
         console.log(err);
+        setIsRegistrationSuccess(false);
+      })
+      .finally(() => {
+        setInfoTooltipPopupOpen(true);
       });
   };
 
   const tokenCheck = () => {
-    if (localStorage.getItem("jwt")) {
-      let jwt = localStorage.getItem("jwt");
+    let jwt = localStorage.getItem("jwt");
+    if (jwt) {
       auth
         .checkToken(jwt)
         .then((res) => {
@@ -182,7 +187,7 @@ function App() {
     localStorage.removeItem("token");
     setLoggedIn(false);
     setUserData(null);
-    history.push("/sign-up");
+    history.push("/sign-in");
   };
 
   useEffect(() => {

@@ -1,5 +1,5 @@
 import successImage from "../images/successImage.svg";
-import errorImage from "../images/erorrImage.svg";
+import errorImage from "../images/ErorrImage.svg";
 import React from "react";
 
 export default function InfoTooltip({ onClose, isOpen, succes }) {
